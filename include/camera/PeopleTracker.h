@@ -10,10 +10,9 @@
 
 #include "HikerCam.h"
 #include "Spinnaker.h"
+#include "Kalman.h"
 #include <vector>
 #include <atomic>
-
-class Centroid;
 
 class PeopleTracker {
     public:
@@ -29,7 +28,7 @@ class PeopleTracker {
         std::atomic<int> peopleCount;
         HikerCam* mCam;
         std::atomic<bool> endTrackingSignal;
-        std::vector<Centroid*>* centroidTracker;
+        std::vector<Kalman*>* kalmanTracker;
 };
 
 #endif /* PEOPLE_TRACKER_H_ */
