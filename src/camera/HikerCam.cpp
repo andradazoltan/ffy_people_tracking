@@ -185,6 +185,54 @@ int HikerCam::EnableInference(INodeMap& nodeMap) {
         boundingBoxThreshold->SetValue(0.60);
     }
 
+    // Set TriggerSelector to FrameStart
+    CEnumerationPtr triggerSelector = nodeMap.GetNode("TriggerSelector");
+    if (!IsAvailable(triggerSelector) || !IsWritable(triggerSelector)) {
+        cout << "TriggerSelector is not available or writable.\n";
+        return -1;
+    }
+    else {
+        CEnumEntryPtr frameStart = triggerSelector->GetEntryByName("FrameStart");
+        if (!IsAvailable(frameStart)) {
+            cout << "FrameStart is not a valid enum entry.\n";
+            return -1;
+        }
+
+        triggerSelector->SetIntValue(frameStart->GetValue());
+    }
+
+    // Set TriggerMode to On
+    CEnumerationPtr triggerMode = nodeMap.GetNode("TriggerMode");
+    if (!IsAvailable(triggerMode) || !IsWritable(triggerMode)) {
+        cout << "TriggerMode is not available or writable.\n";
+        return -1;
+    }
+    else {
+        CEnumEntryPtr onMode = triggerMode->GetEntryByName("On");
+        if (!IsAvailable(onMode)) {
+            cout << "On is not a valid enum entry.\n";
+            return -1;
+        }
+
+        triggerMode->SetIntValue(onMode->GetValue());
+    }
+
+    // Set TriggerSource to InferenceReady
+    CEnumerationPtr triggerSource = nodeMap.GetNode("TriggerSource");
+    if (!IsAvailable(triggerSource) || !IsWritable(triggerSource)) {
+        cout << "TriggerSource is not available or writable.\n";
+        return -1;
+    }
+    else {
+        CEnumEntryPtr infReady = triggerSource->GetEntryByName("InferenceReady");
+        if (!IsAvailable(infReady)) {
+            cout << "InferenceReady is not a valid enum entry.\n";
+            return -1;
+        }
+
+        triggerSource->SetIntValue(infReady->GetValue());
+    }
+
     return 0;
 }
 
