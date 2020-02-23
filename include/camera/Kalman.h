@@ -15,7 +15,7 @@
 
 #define CAM_X           1440
 #define CAM_Y           770
-#define CAM_MS_PER_FRAME 17
+#define CAM_MS_PER_FRAME 40
 #define INFERENCE_TIME 160
 
 class Kalman {
@@ -35,7 +35,7 @@ class Kalman {
         int count; 
 
         /* 
-         * This is a 5-element vector containing the current
+         * This is a 4-element vector containing the current
          * estimate of :
          *      (*x)[0] = x position in pixels
          *      (*x)[1] = y position in pixels

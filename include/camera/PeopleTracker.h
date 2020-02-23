@@ -10,7 +10,7 @@
 
 #include "HikerCam.h"
 #include "Spinnaker.h"
-#include "Kalman.h"
+#include "Centroid.h"
 #include <vector>
 #include <atomic>
 
@@ -28,7 +28,7 @@ class PeopleTracker {
         std::atomic<int> peopleCount;
         HikerCam* mCam;
         std::atomic<bool> endTrackingSignal;
-        std::vector<Kalman*>* kalmanTracker;
+        std::vector<Centroid*>* centroidTracker;
 };
 
 #endif /* PEOPLE_TRACKER_H_ */

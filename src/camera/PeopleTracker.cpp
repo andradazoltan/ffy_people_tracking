@@ -24,7 +24,7 @@ using std::thread;
 
 /********************* People Tracker Class ****************************/
 PeopleTracker::PeopleTracker() : peopleCount(0), endTrackingSignal(false){
-    kalmanTracker = new vector<Kalman*>();
+    centroidTracker = new vector<Centroid*>();
     mCam = new HikerCam();
 }
 
@@ -37,23 +37,20 @@ void PeopleTracker::StartTracking() {
     // Create acquisition thread
     thread acqThread(&HikerCam::StartAcquisition, mCam);
 
-    // Sleep to misalign readings with new bounding box entries
-    Sleep(60);
-
     while (!endTrackingSignal) {
         Sleep(INFERENCE_TIME);
         vector<InferenceBoundingBox> boundingBoxes;
         mCam->GetBoundingBoxData(boundingBoxes);
 
-        if (kalmanTracker->size() == 0) {
+        if (centroidTracker->size() == 0) {
             // Make new boxes for each of them 
             for (auto it = boundingBoxes.begin(); it != boundingBoxes.end(); ++it) {
                 InferenceBoundingBox box = *it;
 
                 // Create new centroid
                 if (box.classId == PERSON_ID && box.confidence > CONFIDENCE_THRESH) {
-                    Kalman* kalm = new Kalman(box);
-                    kalmanTracker->push_back(kalm);
+                    Centroid* cent = new Centroid(box);
+                    centroidTracker->push_back(cent);
                 }
             }
         } 
@@ -64,10 +61,10 @@ void PeopleTracker::StartTracking() {
 
                 if (box.classId == PERSON_ID && box.confidence > CONFIDENCE_THRESH) {
                     bool match = false;
-                    for (auto it_ctr = kalmanTracker->begin(); it_ctr != kalmanTracker->end(); ++it_ctr) {
+                    for (auto it_ctr = centroidTracker->begin(); it_ctr != centroidTracker->end(); ++it_ctr) {
                         if ((*it_ctr)->IsBoxMatch(box)) {
                             match = true;
-                            (*it_ctr)->Update(box);
+                            (*it_ctr)->updateCentroid(box);
                             cout << "match\n";
                             break;
                         }
@@ -76,17 +73,16 @@ void PeopleTracker::StartTracking() {
                     // Make a new tracker if the existing ones don't match
                     if (!match) {
                         cout << "NEW!\n";
-                        Kalman* kalm = new Kalman(box);
-                        kalmanTracker->push_back(kalm);
+                        Centroid* cent = new Centroid(box);
+                        centroidTracker->push_back(cent);
                     }
                 }
             }
         }
 
         // Update all trackers for next round of comparison
-        for (auto it_ctr = kalmanTracker->begin(); it_ctr != kalmanTracker->end(); ++it_ctr) {
-            (*it_ctr)->Predict();
-            if ((*it_ctr)->updateCounters() > COUNT_THRESH) {
+        for (auto it_ctr = centroidTracker->begin(); it_ctr != centroidTracker->end(); ++it_ctr) {
+            if ((*it_ctr)->updateCentroid() == -1) {
                 cout << "DELETE\n";
                 // Update people counter
                 if ((*it_ctr)->getDir() == LEFT)
@@ -99,10 +95,10 @@ void PeopleTracker::StartTracking() {
         }
 
         // Erase whatever trackers were deallocated in the previous step
-        int numTrackers = kalmanTracker->size();
+        int numTrackers = centroidTracker->size();
         for (int i = 0; i < numTrackers; i++) {
-            if ((*kalmanTracker)[i] == NULL) {
-                kalmanTracker->erase(kalmanTracker->begin() + i);
+            if ((*centroidTracker)[i] == NULL) {
+                centroidTracker->erase(centroidTracker->begin() + i);
                 numTrackers--;
             }
 
@@ -125,6 +121,6 @@ int PeopleTracker::GetPeopleCount() {
 }
 
 PeopleTracker::~PeopleTracker() {
-    delete kalmanTracker;
+    delete centroidTracker;
 }
 

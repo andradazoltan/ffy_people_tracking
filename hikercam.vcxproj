@@ -152,12 +152,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\camera\Centroid.h" />
     <ClInclude Include="include\camera\HikerCam.h" />
     <ClInclude Include="include\camera\Kalman.h" />
     <ClInclude Include="include\camera\PeopleTracker.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\camera\Centroid.cpp" />
     <ClCompile Include="src\camera\HikerCam.cpp" />
     <ClCompile Include="src\camera\Kalman.cpp" />
     <ClCompile Include="src\camera\PeopleTracker.cpp" />
