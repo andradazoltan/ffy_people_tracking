@@ -17,7 +17,6 @@ using std::thread;
 
 #define DIST_THRESH 200
 
-/******************** Kalman Class ******************************/
 Kalman::Kalman(InferenceBoundingBox box) {
     // Initialize starting vector
     x = new vector<double>(4);
@@ -38,6 +37,53 @@ Kalman::Kalman(InferenceBoundingBox box) {
     count = 0;
 }
 
+/*
+ * Determines if the provided box matches the current filter
+ * by comparing it to the predicted state.
+ */
+bool Kalman::isBoxMatch(InferenceBoundingBox box) {
+    // Predict the state vector
+    this->Predict();
+    
+    // Compare the predicted vector with the observed vector
+    vector<double> obs = this->MakeStateVector(box);
+
+    double squaredSum = 0;
+    for (int i = 0; i < 4; i++) {
+        squaredSum += (pow(obs[i] - (*x)[i], 2));
+    }
+    double dist = sqrt(squaredSum);
+
+    return (dist < DIST_THRESH);
+}
+
+/*
+ * Update the current estimate with a new bounding box measurement.
+ * Creates a state vector for the observed box and calls the full
+ * update function.
+ */
+void Kalman::updateTracker(InferenceBoundingBox box) {
+    // Reset missing counter
+    count = 0;
+
+    vector<double> sv = this->MakeStateVector(box);
+    double obsCov[][4] = { {1, 0, 0, 0},
+                        {0, 1, 0, 0},
+                        {0, 0, 10, 0},
+                        {0, 0, 0, 2} };
+
+    this->Update(sv, obsCov);
+}
+
+bool Kalman::getDir(void) {
+    return ((*x)[2] > 0);
+}
+
+Kalman::~Kalman() {
+    delete x;
+}
+
+/************************ Private Functions ****************************/
 /* 
  * Predict the next state vector and covariance matrix using
  * the prediction matrix, and update the current state with
@@ -69,23 +115,6 @@ vector<double> Kalman::Predict(void) {
     matMultiply(tempMat, predTrans, cov); // P(k) = F * P(k-1) * F_T
 
     return state;
-}
-
-/*
- * Update the current estimate with a new bounding box measurement.
- * Creates a state vector for the observed box and calls the full
- * update function.
- */
-void Kalman::Update(InferenceBoundingBox box) {
-    vector<double> sv = this->MakeStateVector(box);
-    double obsCov[][4] = { {1, 0, 0, 0},
-                        {0, 1, 0, 0},
-                        {0, 0, 10, 0},
-                        {0, 0, 0, 2} };
-
-    this->Update(sv, obsCov);
-
-    count = 0;
 }
 
 /* 
@@ -175,36 +204,6 @@ vector<double> Kalman::MakeStateVector(InferenceBoundingBox box) {
         pow(box.rect.bottomRightYCoord - box.rect.topLeftYCoord, 2)));
 
     return ret;
-}
-
-/* 
- * Determines if the provided box matches the current filter
- * by comparing it to the predicted state.
- */
-bool Kalman::IsBoxMatch(InferenceBoundingBox box) {
-    vector<double> obs = this->MakeStateVector(box);
-
-    double squaredSum = 0;
-    for (int i = 0; i < 4; i++) {
-        cout << i << " o:" << obs[i] << " p:" << (*x)[i] << " ";
-        squaredSum += (pow(obs[i] - (*x)[i], 2));
-    }
-    double dist = sqrt(squaredSum);
-    cout << "\n" << dist << "\n";
-    return (dist < DIST_THRESH);
-}
-
-int Kalman::updateCounters(void) {
-    count++;
-    return count;
-}
-
-bool Kalman::getDir(void) {
-    return ((*x)[2] > 0);
-}
-
-Kalman::~Kalman() {
-    delete x;
 }
 
 /*
@@ -297,7 +296,7 @@ void Kalman::matAdjoint(double mat[4][4], double adj[4][4]) {
 
             // Interchanging rows and columns to get the 
             // transpose of the cofactor matrix 
-            adj[j][i] = (sign) * (matDeterminant(temp, 3));
+            adj[j][i] = sign * (matDeterminant(temp, 3));
         }
     }
 }

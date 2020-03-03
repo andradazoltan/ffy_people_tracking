@@ -1,6 +1,6 @@
 # HikerCam
 
-This project uses a Firefly Deep Learning Camera to perform people counting as people pass into and out of the frame. The initial application for this project was a device mounted at the head of hiking trails to track populations on the trail throughout the day, hence the name 'HikerCam', however it can be applied to any scenario. 
+This project uses a [Firefly Deep Learning Camera](https://www.flir.ca/products/firefly-dl/) to perform people counting as people pass into and out of the frame. The initial application for this project was a device mounted at the head of hiking trails to track populations on the trail throughout the day, hence the name 'HikerCam', however it can be applied to any scenario. 
 
 ## General Design
 The design has two major components that work together to count people:

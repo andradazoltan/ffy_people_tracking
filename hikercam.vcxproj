@@ -134,7 +134,7 @@
       </SDLCheck>
       <PreprocessorDefinitions>_DEBUG;WIN32;_CONSOLE;_CRT_SECURE_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\CPEN391\hikercam\hikercam\include\camera;C:\CPEN391\hikercam\hikercam\include\spinnaker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\CPEN391\hikercam\hikercam\include;C:\CPEN391\hikercam\hikercam\include\trackers;C:\CPEN391\hikercam\hikercam\include\spinnaker;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <SupportJustMyCode>true</SupportJustMyCode>
       <Optimization>Disabled</Optimization>
@@ -152,18 +152,21 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="include\camera\Centroid.h" />
-    <ClInclude Include="include\camera\HikerCam.h" />
-    <ClInclude Include="include\camera\Kalman.h" />
-    <ClInclude Include="include\camera\PeopleTracker.h" />
+    <ClInclude Include="include\HikerCam.h" />
+    <ClInclude Include="include\PeopleCounter.h" />
+    <ClInclude Include="include\trackers\Centroid.h" />
+    <ClInclude Include="include\trackers\Kalman.h" />
+    <ClInclude Include="include\trackers\StateCentroid.h" />
+    <ClInclude Include="include\trackers\Tracker.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\camera\Centroid.cpp" />
-    <ClCompile Include="src\camera\HikerCam.cpp" />
-    <ClCompile Include="src\camera\Kalman.cpp" />
-    <ClCompile Include="src\camera\PeopleTracker.cpp" />
+    <ClCompile Include="src\HikerCam.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\PeopleCounter.cpp" />
+    <ClCompile Include="src\trackers\Centroid.cpp" />
+    <ClCompile Include="src\trackers\Kalman.cpp" />
+    <ClCompile Include="src\trackers\StateCentroid.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

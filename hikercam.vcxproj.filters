@@ -13,39 +13,54 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\trackers">
+      <UniqueIdentifier>{9afd177f-755c-441a-a252-f46318ceebca}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\trackers">
+      <UniqueIdentifier>{6cf37d9d-9316-4325-8963-a971d293b2b0}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="include\camera\HikerCam.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>Resource Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\camera\PeopleTracker.h">
+    <ClInclude Include="include\HikerCam.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\camera\Kalman.h">
+    <ClInclude Include="include\PeopleCounter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="include\camera\Centroid.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="include\trackers\Centroid.h">
+      <Filter>Header Files\trackers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\trackers\Kalman.h">
+      <Filter>Header Files\trackers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\trackers\StateCentroid.h">
+      <Filter>Header Files\trackers</Filter>
+    </ClInclude>
+    <ClInclude Include="include\trackers\Tracker.h">
+      <Filter>Header Files\trackers</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\camera\HikerCam.cpp">
+    <ClCompile Include="src\HikerCam.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\camera\PeopleTracker.cpp">
+    <ClCompile Include="src\PeopleCounter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\camera\Kalman.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\trackers\Centroid.cpp">
+      <Filter>Source Files\trackers</Filter>
     </ClCompile>
-    <ClCompile Include="src\camera\Centroid.cpp">
-      <Filter>Source Files</Filter>
+    <ClCompile Include="src\trackers\Kalman.cpp">
+      <Filter>Source Files\trackers</Filter>
+    </ClCompile>
+    <ClCompile Include="src\trackers\StateCentroid.cpp">
+      <Filter>Source Files\trackers</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

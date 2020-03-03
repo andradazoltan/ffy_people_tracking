@@ -1,11 +1,14 @@
 /*
- *  PeopleTracker.cpp
+ *  PeopleCounter.cpp
  *
  *  Created on: Feb 6, 2020
  *  Author: Andrada Zoltan
  */
 
-#include "PeopleTracker.h"
+#include "PeopleCounter.h"
+#include "Centroid.h"
+#include "StateCentroid.h"
+#include "Kalman.h"
 #include <iostream>
 #include <thread>
 
@@ -13,27 +16,26 @@
 #define PERSON_ID 15
 #define CONFIDENCE_THRESH 0.70
 
-#define LEFT 0
-#define RIGHT 1
-
 using namespace Spinnaker;
 
 using std::cout;
 using std::vector;
 using std::thread;
 
-/********************* People Tracker Class ****************************/
-PeopleTracker::PeopleTracker() : peopleCount(0), endTrackingSignal(false){
-    centroidTracker = new vector<Centroid*>();
+template <class T>
+PeopleCounter<T>::PeopleCounter() : peopleCount(0), endTrackingSignal(false) {
+    tracker = new vector<T>();
     mCam = new HikerCam();
 }
 
-int PeopleTracker::InitTracker() {
+template <class T>
+int PeopleCounter<T>::InitPeopleCounter() {
     if (mCam->InitCamera())
         return -1;
 }
 
-void PeopleTracker::StartTracking() {
+template <class T>
+void PeopleCounter<T>::StartPeopleCounter() {
     // Create acquisition thread
     thread acqThread(&HikerCam::StartAcquisition, mCam);
 
@@ -42,15 +44,15 @@ void PeopleTracker::StartTracking() {
         vector<InferenceBoundingBox> boundingBoxes;
         mCam->GetBoundingBoxData(boundingBoxes);
 
-        if (centroidTracker->size() == 0) {
+        if (tracker->size() == 0) {
             // Make new boxes for each of them 
             for (auto it = boundingBoxes.begin(); it != boundingBoxes.end(); ++it) {
                 InferenceBoundingBox box = *it;
 
                 // Create new centroid
                 if (box.classId == PERSON_ID && box.confidence > CONFIDENCE_THRESH) {
-                    Centroid* cent = new Centroid(box);
-                    centroidTracker->push_back(cent);
+                    T* tr = new T(box);
+                    tracker->push_back(tr);
                 }
             }
         } 
@@ -61,10 +63,10 @@ void PeopleTracker::StartTracking() {
 
                 if (box.classId == PERSON_ID && box.confidence > CONFIDENCE_THRESH) {
                     bool match = false;
-                    for (auto it_ctr = centroidTracker->begin(); it_ctr != centroidTracker->end(); ++it_ctr) {
+                    for (auto it_ctr = tracker->begin(); it_ctr != tracker->end(); ++it_ctr) {
                         if ((*it_ctr)->IsBoxMatch(box)) {
                             match = true;
-                            (*it_ctr)->updateCentroid(box);
+                            (*it_ctr)->updateTracker(box);
                             cout << "match\n";
                             break;
                         }
@@ -73,16 +75,16 @@ void PeopleTracker::StartTracking() {
                     // Make a new tracker if the existing ones don't match
                     if (!match) {
                         cout << "NEW!\n";
-                        Centroid* cent = new Centroid(box);
-                        centroidTracker->push_back(cent);
+                        T* tr = new T(box);
+                        tracker->push_back(tr);
                     }
                 }
             }
         }
 
         // Update all trackers for next round of comparison
-        for (auto it_ctr = centroidTracker->begin(); it_ctr != centroidTracker->end(); ++it_ctr) {
-            if ((*it_ctr)->updateCentroid() == -1) {
+        for (auto it_ctr = tracker->begin(); it_ctr != tracker->end(); ++it_ctr) {
+            if ((*it_ctr)->updateTracker() == -1) {
                 cout << "DELETE\n";
                 // Update people counter
                 if ((*it_ctr)->getDir() == LEFT)
@@ -95,10 +97,10 @@ void PeopleTracker::StartTracking() {
         }
 
         // Erase whatever trackers were deallocated in the previous step
-        int numTrackers = centroidTracker->size();
+        int numTrackers = tracker->size();
         for (int i = 0; i < numTrackers; i++) {
-            if ((*centroidTracker)[i] == NULL) {
-                centroidTracker->erase(centroidTracker->begin() + i);
+            if ((*tracker)[i] == NULL) {
+                tracker->erase(tracker->begin() + i);
                 numTrackers--;
             }
 
@@ -112,15 +114,18 @@ void PeopleTracker::StartTracking() {
     acqThread.join();
 }
 
-void PeopleTracker::StopTracking() {
+template <class T>
+void PeopleCounter<T>::StopPeopleCounter() {
     endTrackingSignal.store(true);
 }
 
-int PeopleTracker::GetPeopleCount() {
+template <class T>
+int PeopleCounter<T>::GetPeopleCount() {
     return peopleCount;
 }
 
-PeopleTracker::~PeopleTracker() {
-    delete centroidTracker;
+template <class T>
+PeopleCounter<T>::~PeopleCounter() {
+    delete tracker;
 }
 

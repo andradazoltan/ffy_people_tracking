@@ -1,39 +1,29 @@
+#pragma once
 /*
  *  Kalman.h
+ *
+ *  Class for tracking an InferenceBoundingBox using a Kalman filter
+ *  to predict the next state of the box.
  *
  *  Created on: Feb 16, 2020
  *  Author: Andrada Zoltan
  */
 
-#ifndef KALMAN_H_
-#define KALMAN_H_
-
-#include "Spinnaker.h"
-#include "SpinGenApi/SpinnakerGenApi.h"
+#include "Tracker.h"
 #include <vector>
 #include <atomic>
 
-#define CAM_X           1440
-#define CAM_Y           770
-#define CAM_MS_PER_FRAME 40
-#define INFERENCE_TIME 160
-
-class Kalman {
+class Kalman : public Tracker {
     public:
         Kalman(Spinnaker::InferenceBoundingBox box);
-        std::vector<double> Predict(void);
-        void Update(Spinnaker::InferenceBoundingBox box);
-        void Update(std::vector<double> obsState, double obsCov[][4]);
-        std::vector<double> MakeStateVector(Spinnaker::InferenceBoundingBox box);
-        bool IsBoxMatch(Spinnaker::InferenceBoundingBox box);
-        int updateCounters(void);
+
+        bool isBoxMatch(Spinnaker::InferenceBoundingBox box);
+        void updateTracker(Spinnaker::InferenceBoundingBox box);
         bool getDir(void);
+
         ~Kalman();
 
     private:
-        // Counter for how many frames this has not appeared in
-        int count; 
-
         /* 
          * This is a 4-element vector containing the current
          * estimate of :
@@ -63,11 +53,15 @@ class Kalman {
                                       {CAM_MS_PER_FRAME, 0, 1, 0},
                                       {0, 0, 0, 1}};
 
+        // Filter function
+        std::vector<double> Predict(void);
+        void Update(std::vector<double> obsState, double obsCov[][4]);
+        std::vector<double> MakeStateVector(Spinnaker::InferenceBoundingBox box);
+
+        // Matrix utility functions
         void matMultiply(const double mat1[][4], const double mat2[][4], double res[][4]);
         void matInverse(double mat[4][4]);
         int matDeterminant(double mat[4][4], int n);
         void getCofactor(double mat[4][4], double temp[4][4], int p, int q, int n);
         void matAdjoint(double mat[4][4], double adj[4][4]);
 };
-
-#endif /* KALMAN_H_ */

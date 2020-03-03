@@ -1,7 +1,13 @@
-#include "Centroid.h"
+/*
+ * StateCentroid.cpp
+ *
+ * Created on: 22 Feb 2020
+ * Author: Andrada Zoltan
+ */
+
+#include "StateCentroid.h"
 #include <iostream>
 
-#define MISSING_THRESH 5
 #define DIST_X_THRESH 200
 #define DIST_Y_THRESH 20
 #define VEL_X_THRESH  2
@@ -12,7 +18,7 @@ using namespace Spinnaker;
 using std::cout;
 using std::vector;
 
-Centroid::Centroid(InferenceBoundingBox box) {
+StateCentroid::StateCentroid(InferenceBoundingBox box) {
     count = 0;
     state = new vector<double>(4);
     *state = MakeStateVector(box);
@@ -27,7 +33,7 @@ Centroid::Centroid(InferenceBoundingBox box) {
  * Determines if the provided box matches the current filter
  * by comparing it to the predicted state.
  */
-bool Centroid::IsBoxMatch(InferenceBoundingBox box) {
+bool StateCentroid::isBoxMatch(InferenceBoundingBox box) {
     vector<double> obs = MakeStateVector(box);
     bool ret = true;
 
@@ -44,11 +50,7 @@ bool Centroid::IsBoxMatch(InferenceBoundingBox box) {
     return ret;
 }
 
-bool Centroid::getDir(void) {
-    return ((*state)[2] > 0);
-}
-
-void Centroid::updateCentroid(InferenceBoundingBox box) {
+void StateCentroid::updateTracker(InferenceBoundingBox box) {
     // Reset missing counter
     count = 0;
 
@@ -56,15 +58,11 @@ void Centroid::updateCentroid(InferenceBoundingBox box) {
     *state = MakeStateVector(box);
 }
 
-int Centroid::updateCentroid() {
-    count++;
-    if (count > MISSING_THRESH)
-        return -1;
-    else
-        return 0;
+bool StateCentroid::getDir(void) {
+    return ((*state)[2] > 0);
 }
 
-Centroid::~Centroid() {
+StateCentroid::~StateCentroid() {
     delete state;
 }
 
@@ -72,7 +70,7 @@ Centroid::~Centroid() {
  * Takes in a bounding box and creates a state vector that
  * represents the state of the system at this point.
  */
-vector<double> Centroid::MakeStateVector(InferenceBoundingBox box) {
+vector<double> StateCentroid::MakeStateVector(InferenceBoundingBox box) {
     vector<double> ret;
     ret.push_back((box.rect.bottomRightXCoord + box.rect.topLeftXCoord) / 2); // X position
     ret.push_back((box.rect.bottomRightYCoord + box.rect.topLeftYCoord) / 2); // Y position
