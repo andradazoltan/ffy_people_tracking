@@ -22,11 +22,6 @@ StateCentroid::StateCentroid(InferenceBoundingBox box) {
     count = 0;
     state = new vector<double>(4);
     *state = MakeStateVector(box);
-
-    cout << "NEW: ";
-    for (int i = 0; i < 4; i++)
-        cout << (*state)[i] << " ";
-    cout << "\n";
 }
 
 /*
@@ -42,10 +37,6 @@ bool StateCentroid::isBoxMatch(InferenceBoundingBox box) {
         abs(obs[2] - (*state)[2]) > VEL_X_THRESH&&
         abs(obs[3] - (*state)[3]) > BOX_SIZE_THRESH)
         ret = false;
-    cout << "\n";
-    for (int i = 0; i < 4; i++) {
-        cout << i << " o:" << obs[i] << " p:" << (*state)[i] << " ";
-    }
 
     return ret;
 }

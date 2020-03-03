@@ -1,4 +1,3 @@
-#pragma once
 /*
  *  PeopleCounter.cpp
  *
@@ -6,19 +5,9 @@
  *  Author: Andrada Zoltan
  */
 
-#include "PeopleCounter.h"
-#include <iostream>
-#include <thread>
-
 #define COUNT_THRESH 5
 #define PERSON_ID 15
 #define CONFIDENCE_THRESH 0.70
-
-using namespace Spinnaker;
-
-using std::cout;
-using std::vector;
-using std::thread;
 
 template <class T> 
 PeopleCounter<T>::PeopleCounter() : peopleCount(0), endTrackingSignal(false) {

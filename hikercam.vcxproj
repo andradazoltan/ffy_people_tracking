@@ -144,8 +144,8 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <OptimizeReferences>true</OptimizeReferences>
+      <EnableCOMDATFolding>false</EnableCOMDATFolding>
+      <OptimizeReferences>false</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>C:\CPEN391\hikercam\hikercam\x64\Release;C:\Program Files\Point Grey Research\Spinnaker\lib64\vs2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>C:\Program Files\Point Grey Research\Spinnaker\lib64\vs2015\Spinnaker_v140.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -163,7 +163,6 @@
   <ItemGroup>
     <ClCompile Include="src\HikerCam.cpp" />
     <ClCompile Include="src\main.cpp" />
-    <ClCompile Include="src\PeopleCounter.cpp" />
     <ClCompile Include="src\trackers\Centroid.cpp" />
     <ClCompile Include="src\trackers\Kalman.cpp" />
     <ClCompile Include="src\trackers\StateCentroid.cpp" />

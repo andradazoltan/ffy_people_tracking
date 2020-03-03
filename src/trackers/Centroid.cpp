@@ -10,7 +10,6 @@
 #include <thread>
 
 #define DIST_TOLERANCE 300
-#define MISSING_THRESH 15
 
 using namespace Spinnaker;
 

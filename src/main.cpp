@@ -6,7 +6,6 @@
  */
 
 #include "PeopleCounter.h"
-#include "PeopleCounter.cpp" // Get rid of linker error
 #include "Tracker.h"
 #include "Centroid.h"
 #include "Kalman.h"

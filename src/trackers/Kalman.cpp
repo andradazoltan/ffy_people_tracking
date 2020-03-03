@@ -22,11 +22,6 @@ Kalman::Kalman(InferenceBoundingBox box) {
     x = new vector<double>(4);
     *x = this->MakeStateVector(box);
 
-    cout << "NEW: ";
-    for (int i = 0; i < 4; i++)
-        cout << (*x)[i] << " ";
-    cout << "\n";
-
     // Initialize covariance matrix
     double covTemp[][4] = {{1, 0, 2, 0},
                         {0, 1, 0, 0},
@@ -259,7 +254,7 @@ int Kalman::matDeterminant(double mat[4][4], int n) {
         sign = -sign;
     }
 
-    return det;
+    return (int)det;
 }
 
 /*
