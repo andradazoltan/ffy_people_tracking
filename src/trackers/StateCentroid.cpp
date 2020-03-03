@@ -58,6 +58,10 @@ void StateCentroid::updateTracker(InferenceBoundingBox box) {
     *state = MakeStateVector(box);
 }
 
+int StateCentroid::updateTracker(void) {
+    return (Tracker::updateTracker());
+}
+
 bool StateCentroid::getDir(void) {
     return ((*state)[2] > 0);
 }

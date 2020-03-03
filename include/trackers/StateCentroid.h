@@ -17,6 +17,7 @@ class StateCentroid : public Tracker {
 
         bool isBoxMatch(Spinnaker::InferenceBoundingBox box);
         void updateTracker(Spinnaker::InferenceBoundingBox box);
+        int updateTracker(void);;
         bool getDir(void);
 
         ~StateCentroid();

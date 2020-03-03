@@ -75,6 +75,10 @@ void Kalman::updateTracker(InferenceBoundingBox box) {
     this->Update(sv, obsCov);
 }
 
+int Kalman::updateTracker(void) {
+    return (Tracker::updateTracker());
+}
+
 bool Kalman::getDir(void) {
     return ((*x)[2] > 0);
 }

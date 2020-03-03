@@ -55,6 +55,10 @@ void Centroid::updateTracker(InferenceBoundingBox box) {
     (*centerPrev)[1] = centerYCurr;
 }
 
+int Centroid::updateTracker(void) {
+    return (Tracker::updateTracker());
+}
+
 bool Centroid::getDir(void) {
     return dir;
 }

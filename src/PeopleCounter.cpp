@@ -1,3 +1,4 @@
+#pragma once
 /*
  *  PeopleCounter.cpp
  *
@@ -6,9 +7,6 @@
  */
 
 #include "PeopleCounter.h"
-#include "Centroid.h"
-#include "StateCentroid.h"
-#include "Kalman.h"
 #include <iostream>
 #include <thread>
 
@@ -22,9 +20,9 @@ using std::cout;
 using std::vector;
 using std::thread;
 
-template <class T>
+template <class T> 
 PeopleCounter<T>::PeopleCounter() : peopleCount(0), endTrackingSignal(false) {
-    tracker = new vector<T>();
+    tracker = new vector<T*>();
     mCam = new HikerCam();
 }
 
@@ -64,7 +62,7 @@ void PeopleCounter<T>::StartPeopleCounter() {
                 if (box.classId == PERSON_ID && box.confidence > CONFIDENCE_THRESH) {
                     bool match = false;
                     for (auto it_ctr = tracker->begin(); it_ctr != tracker->end(); ++it_ctr) {
-                        if ((*it_ctr)->IsBoxMatch(box)) {
+                        if ((*it_ctr)->isBoxMatch(box)) {
                             match = true;
                             (*it_ctr)->updateTracker(box);
                             cout << "match\n";
