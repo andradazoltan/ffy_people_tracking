@@ -5,6 +5,7 @@ This project uses a [Firefly Deep Learning Camera](https://www.flir.ca/products/
 ## General Design
 The design has two major components that work together to count people:
 * **CNN People Detection:** A MobileNet SSD network is loaded onto the camera and executes as the camera streams images. With every frame, the latest inference result is outputted in the form of bounding boxes surrounding any people in the frame. Other classes of bounding boxes may also be outputted, but are ignored in this application. A pre-trained network was used, and can be found [here](https://www.flir.ca/support-center/iis/machine-vision/application-note/neural-networks-supported-by-the-firefly-dl/) as the first option under Tested and Supported CNNs. 
+
 * **Bounding Box Tracker:** Custom algorithm written to track bounding boxes as they travel throughout the frame and determine when the bounding boxes are no longer visible. The attempts at implmenting such a solution are outlined below.
 
 ## Tracking Solutions
