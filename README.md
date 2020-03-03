@@ -9,7 +9,9 @@ The design has two major components that work together to count people:
 
 ## Tracking Solutions
 * **Position Tracking:** The first attempt at tracking involved using only the position of the box. If the position between frames moved more than a certain threshold, then the box was deemed to be from a different person in the frame. However, this solution was much too simplistic and does not work for all speeds of people moving through the frame.
+
 * **Kalman Filter:** The second attempt involved implementing a Kalman filter to predict the next state of each box and use the predicted state to determine if the observed state corresponded to the same box. The state of each box was represented by: position of the box, velocity of the box, size of the box. Although this solution worked better, there were still issues with it working consistently. One challenge was determining how to appropriately initialize the filter with a starting state vector, since the velocity varied depending on what proportion of the person was in the frame in the first reading. As well, the filter only underwent several iterations of updates before a person left the frame, so there were not enough readings to improve the accuracy of the filter before it was not needed anymore.
+
 * **State Tracking:** The third attempt involved somewhat of a combination of the first two solutions. Rather than just using the position to differentiate between boxes, more variables were added to the state of a box. Similar to the Kalman filter, the position, velocity and size of the box were used. However in this solution, the filter was removed and instead replaced with a difference threshold between two readings. This solution worked consistenly with only one person passing through the frame. This implementation has not yet been tested with multiple people, so it is likely that the thresholds are too loose for such a scenario.
 
 ## Resources
